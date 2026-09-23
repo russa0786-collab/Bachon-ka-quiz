@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Islamic Quiz - Certificate Wala</title>
+<style>
+body{margin:0; font-family:sans-serif; background:linear-gradient(135deg,#a8edea,#fed6e3); min-height:100vh; padding:15px;}
+.box{max-width:480px; margin:auto; background:#fff; border-radius:20px; padding:20px; text-align:center; box-shadow:0 8px 25px #0002;}
+h1{color:#e65100; margin:5px;}
+.qimg{font-size:60px; margin:10px;}
+#timer{font-weight:bold; color:#d32f2f;}
+.q{font-size:18px; font-weight:bold; background:#fff8e1; padding:12px; border-radius:12px; margin:10px 0;}
+.opt{width:100%; padding:12px; margin:6px 0; border:2px solid #aed581; border-radius:12px; background:#f1f8e9; cursor:pointer;}
+.opt:hover{background:#dcedc8;}
+.green{background:#4caf50!important; color:#fff;}
+.red{background:#ef5350!important; color:#fff;}
+#next{margin-top:12px; background:#ff6f00; color:#fff; border:none; padding:10px 30px; border-radius:20px; display:none; cursor:pointer;}
+input{padding:10px; border-radius:10px; border:1px solid #ccc; width:80%; margin:10px 0;}
+.cert{border:4px double #ff6f00; padding:15px; border-radius:15px; background:#fffde7; margin-top:15px;}
+</style>
+</head>
+<body>
+<div class="box" id="main">
+<h1>🌙 بچوں کا اسلامی کوئز ⭐</h1>
+<div id="startDiv">
+<p>اپنا پیارا نام لکھو:</p>
+<input id="nameInput" placeholder="مثلا: احمد">
+<br><button onclick="startQuiz()" style="background:#0f5e5a; color:white; padding:10px 25px; border:none; border-radius:15px;">شروع کریں</button>
+</div>
+
+<div id="quizDiv" style="display:none;">
+<div id="timer">⏰ 15</div>
+<div id="qimg" class="qimg">🕋</div>
+<div id="q" class="q"></div>
+<div id="opts"></div>
+<button id="next" onclick="nextQ()">اگلا ➡️</button>
+<div id="msg" style="font-weight:bold; color:#2e7d32; margin-top:8px;"></div>
+</div>
+
+<div id="finalDiv" style="display:none;"></div>
+</div>
+
+<script>
+const quiz=[
+{q:"خانہ کعبہ کہاں ہے؟", img:"🕋", o:["مکہ میں","مدینہ میں","لاہور میں","دبئی میں"], a:0, level:"آسان"},
+{q:"قرآن پاک کس پر نازل ہوا؟", img:"📖", o:["حضرت محمد ﷺ","حضرت عیسیٰؑ","حضرت موسیٰؑ","حضرت نوحؑ"], a:0, level:"آسان"},
+{q:"دن میں کتنی نمازیں؟", img:"🕌", o:["3","5","4","6"], a:1, level:"آسان"},
+{q:"روزے کس مہینے میں؟", img:"🌙", o:["رمضان","شعبان","رجب","محرم"], a:0, level:"درمیانہ"},
+{q:"قرآن کی پہلی سورت؟", img:"📜", o:["سورہ فاتحہ","سورہ اخلاص","سورہ بقرہ","سورہ یاسین"], a:0, level:"مشکل"}
+];
+let i=0,s=0,time=15, timerInt, childName="";
+
+function startQuiz(){
+childName=document.getElementById("nameInput").value || "پیارے بچے";
+document.getElementById("startDiv").style.display="none";
+document.getElementById("quizDiv").style.display="block";
+load();
+}
+function load(){
+time=15; document.getElementById("timer").innerText="⏰ "+time;
+clearInterval(timerInt);
+timerInt=setInterval(()=>{time--; document.getElementById("timer").innerText="⏰ "+time; if(time==0){check(-1);}},1000);
+let d=quiz[i];
+document.getElementById("qimg").innerText=d.img;
+document.getElementById("q").innerText=(i+1)+". ["+d.level+"] "+d.q;
+let opDiv=document.getElementById("opts"); opDiv.innerHTML="";
+d.o.forEach((op,idx)=>{let b=document.createElement("button"); b.className="opt"; b.innerText=op; b.onclick=()=>check(idx,b); opDiv.appendChild(b);});
+document.getElementById("next").style.display="none"; document.getElementById("msg").innerText="";
+}
+function speak(t){try{let u=new SpeechSynthesisUtterance(t); u.lang="ur-PK"; speechSynthesis.speak(u);}catch(e){}}
+function check(idx,btn){
+clearInterval(timerInt);
+let all=document.querySelectorAll(".opt");
+let cor=quiz[i].a;
+if(idx==cor){if(btn) btn.classList.add("green"); s++; document.getElementById("msg").innerText="ماشاءاللہ! 🌸"; speak("ماشاءاللہ بہت خوب");}
+else{if(btn) btn.classList.add("red"); if(all[cor]) all[cor].classList.add("green"); document.getElementById("msg").innerText="صحیح جواب: "+quiz[i].o[cor];}
+all.forEach(b=>b.disabled=true);
+document.getElementById("next").style.display="inline-block";
+if(i==quiz.length-1) document.getElementById("next").innerText="انعام دیکھیں 🎁";
+}
+function nextQ(){
+i++; if(i<quiz.length){load();} else{showCert();}
+}
+function showCert(){
+document.getElementById("quizDiv").style.display="none";
+let f=document.getElementById("finalDiv"); f.style.display="block";
+let stars=s>=4?"⭐⭐⭐ ممتاز":s>=2?"⭐⭐ بہت اچھے":"⭐ کوشش جاری رکھو";
+f.innerHTML=`
+<div class="cert">
+<h2>🎓 تعریفی سرٹیفکیٹ 🎓</h2>
+<p>یہ سرٹیفکیٹ دیا جاتا ہے</p>
+<h1 style="color:#0f5e5a;">${childName}</h1>
+<p>نے اسلامی کوئز میں</p>
+<h2>${s} / ${quiz.length} نمبر حاصل کیے</h2>
+<p>${stars}</p>
+<div style="font-size:50px;">🕋📖🏆</div>
+<p>اللہ آپ کے علم میں برکت دے!</p>
+</div>
+<br><button onclick="location.reload()" style="background:#0f5e5a; color:white; padding:10px 25px; border:none; border-radius:15px;">دوبارہ کھیلیں</button>
+`;
+speak("مبارک ہو "+childName);
+}
+</script>
+</body>
+</html>
