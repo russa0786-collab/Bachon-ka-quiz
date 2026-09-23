@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بچوں کا اسلامی کوئز</title>
+<style>
+body{margin:0;font-family:system-ui;background:#fff3e0;text-align:center;padding:15px}
+.box{max-width:480px;margin:auto;background:#fff;padding:20px;border-radius:16px;box-shadow:0 5px 15px rgba(0,0,0,.2)}
+h1{color:#e65100}
+.q{font-size:18px;font-weight:bold;background:#fff8e1;padding:12px;border-radius:10px;margin:10px 0}
+.opt{width:100%;padding:12px;margin:6px 0;border:2px solid #ffcc80;border-radius:10px;background:#fff;font-size:16px}
+.opt:active{background:#ffe0b2}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>🌙 بچوں کا اسلامی کوئز ⭐</h1>
+<div style="font-size:50px" id="emoji">🕋</div>
+<p id="timer">⏰ 15</p>
+<div class="q" id="question">لوڈ ہو رہا ہے...</div>
+<div id="opts"></div>
+<p id="prog"></p>
+<div id="cert" style="display:none;border:4px double #e65100;padding:15px;margin-top:15px"></div>
+</div>
+<script>
+const quiz=[
+{q:"قرآن میں کتنی سورتیں ہیں؟",o:["114","110","100"],a:0,e:"📖"},
+{q:"آخری نبی کون ہیں؟",o:["حضرت عیسیٰ","حضرت محمد ﷺ","حضرت موسیٰ"],a:1,e:"🌙"},
+{q:"دن میں کتنی نمازیں فرض ہیں؟",o:["3","5","4"],a:1,e:"🕌"},
+{q:"روزہ کس مہینے میں ہے؟",o:["رجب","رمضان","شعبان"],a:1,e:"🌙"},
+{q:"کعبہ کہاں ہے؟",o:["مدینہ","مکہ","بغداد"],a:1,e:"🕋"}
+];
+let i=0,s=0,t=15,iv;
+function show(){
+if(i>=quiz.length){clearInterval(iv);let n=prompt("نام لکھو سرٹیفکیٹ کے لیے:");document.getElementById("question").innerHTML=`ماشاءاللہ! سکور ${s}/${quiz.length}`;document.getElementById("opts").innerHTML=`<button class="opt" onclick="location.reload()">دوبارہ کھیلیں</button><button class="opt" onclick="window.print()">📜 پرنٹ کریں</button>`;let c=document.getElementById("cert");c.style.display="block";c.innerHTML=`<h2>🏆 سرٹیفکیٹ</h2><p>${n} نے ${s}/${quiz.length} نمبر لیے</p><p>بہت خوب!</p>`;return}
+let q=quiz[i];document.getElementById("emoji").innerText=q.e;document.getElementById("question").innerText=q.q;let h="";q.o.forEach((o,idx)=>{h+=`<button class="opt" onclick="check(${idx},this)">${o}</button>`});document.getElementById("opts").innerHTML=h;document.getElementById("prog").innerText=`سوال ${i+1}/${quiz.length} | سکور ${s}`;t=15;clearInterval(iv);iv=setInterval(()=>{t--;document.getElementById("timer").innerText="⏰ "+t;if(t<=0){i++;show()}},1000);
+}
+function check(idx,btn){clearInterval(iv);if(idx===quiz[i].a){s++;btn.style.background="#a5d6a7"}else{btn.style.background="#ef9a9a"}setTimeout(()=>{i++;show()},800);}
+show();
+</script>
+</body>
+</html>
